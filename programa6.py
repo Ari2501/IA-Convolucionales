@@ -16,13 +16,13 @@ def ordenar_puntos(puntos):
 def roi(image, ancho, alto):
     imagen_alineada = None
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    # Usa un umbral adaptativo para mejorar la detección
+    
     th = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
-    cv2.imshow('Umbral', th)  # Mostrar el umbral para depurar
+    cv2.imshow('Umbral', th) 
     cnts = cv2.findContours(th, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
-    cnts = sorted(cnts, key=cv2.contourArea, reverse=True)[:1]  # Toma el contorno más grande
+    cnts = sorted(cnts, key=cv2.contourArea, reverse=True)[:1]  
     for c in cnts:
-        epsilon = 0.01 * cv2.arcLength(c, True)  # Ajusta la precisión de la aproximación
+        epsilon = 0.01 * cv2.arcLength(c, True)  
         approx = cv2.approxPolyDP(c, epsilon, True)
         
         if len(approx) == 4:
