@@ -29,8 +29,8 @@ def load_dataset(image_paths, labels, target_size=(64, 64)):
 # Ejemplo de datos (modifica con tus propios datos)
 image_paths = [
     'C:/Users/Tibs/Documents/python/triangle.png',
-    'C:/Users/Tibs/Documents/python/square.png',
-    'C:/Users/Tibs/Documents/python/circle.png',
+    'C:\Users\Aranz\Downloads\U2 IA\square.png',
+    'C:\Users\Aranz\Downloads\U2 IA\circle.png',
     # Agrega más imágenes aquí
 ]
 labels = [0, 1, 2]  # Etiquetas: 0-Triángulo, 1-Cuadrado, 2-Círculo
