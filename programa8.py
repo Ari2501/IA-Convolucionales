@@ -1,14 +1,12 @@
 import cv2
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Flatten
-from tensorflow.keras.utils import to_categorical
+from tensorflow.keras.models import Sequential # type: ignore
+from tensorflow.keras.layers import Dense, Flatten # type: ignore
+from tensorflow.keras.utils import to_categorical # type: ignore
 from sklearn.model_selection import train_test_split
 import os
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
-
-
 
 # Función para preprocesar las imágenes
 def preprocess_image(image, target_size=(64, 64)):
@@ -28,9 +26,9 @@ def load_dataset(image_paths, labels, target_size=(64, 64)):
 
 # Ejemplo de datos (modifica con tus propios datos)
 image_paths = [
-    'C:/Users/Tibs/Documents/python/triangle.png',
-    'C:\Users\Aranz\Downloads\U2 IA\square.png',
-    'C:\Users\Aranz\Downloads\U2 IA\circle.png',
+    'C:/Users/Aranz/Downloads/U2 IA/triangle.png',
+    'C:/Users/Aranz/Downloads/U2 IA/triangle.png',
+    'C:/Users/Aranz/Downloads/U2 IA/circle.png',
     # Agrega más imágenes aquí
 ]
 labels = [0, 1, 2]  # Etiquetas: 0-Triángulo, 1-Cuadrado, 2-Círculo
@@ -69,22 +67,27 @@ def predict_shape(image, model, target_size=(64, 64)):
 model = tf.keras.models.load_model('shape_detector_model.h5')
 
 # Procesar la imagen para detección de contornos y usar el modelo
-image = cv2.imread('C:/Users/Tibs/Documents/python/FigurasColores.png')
-gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-canny = cv2.Canny(gray, 10, 150)
-canny = cv2.dilate(canny, None, iterations=1)
-canny = cv2.erode(canny, None, iterations=1)
-cnts, _ = cv2.findContours(canny, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+image_path = 'C:/Users/Aranz/Downloads/U2 IA/FigurasColores.png'  # Ruta de la imagen corregida
+image = cv2.imread(image_path)
 
-for c in cnts:
-    x, y, w, h = cv2.boundingRect(c)
-    roi = image[y:y+h, x:x+w]  # Región de interés
-    if roi.size > 0:
-        class_idx = predict_shape(roi, model)
-        label = ["Triangulo", "Cuadrado", "Circulo"][class_idx]
-        cv2.putText(image, label, (x, y-5), 1, 1, (0, 255, 0), 1)
-    cv2.drawContours(image, [c], 0, (0, 255, 0), 2)
+if image is None:
+    print("Error al cargar la imagen. Verifica la ruta y el archivo.")
+else:
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    canny = cv2.Canny(gray, 10, 150)
+    canny = cv2.dilate(canny, None, iterations=1)
+    canny = cv2.erode(canny, None, iterations=1)
+    cnts, _ = cv2.findContours(canny, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-cv2.imshow('image', image)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+    for c in cnts:
+        x, y, w, h = cv2.boundingRect(c)
+        roi = image[y:y+h, x:x+w]  # Región de interés
+        if roi.size > 0:
+            class_idx = predict_shape(roi, model)
+            label = ["Triangulo", "Cuadrado", "Circulo"][class_idx]
+            cv2.putText(image, label, (x, y-5), 1, 1, (0, 255, 0), 1)
+        cv2.drawContours(image, [c], 0, (0, 255, 0), 2)
+
+    cv2.imshow('image', image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
